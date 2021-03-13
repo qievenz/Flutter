@@ -7,7 +7,8 @@ class HomePageTemp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Componentes temp')
+        title: Text('Componentes temp'),
+        leading: BackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: ListView(
         //children: _crearItems()

@@ -8,6 +8,7 @@ class CardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cards'),
+        actions: [],
       ),
       body: ListView(
         padding: EdgeInsets.all(20),
