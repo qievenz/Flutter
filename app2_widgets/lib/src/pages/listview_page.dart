@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class ListviewPage extends StatefulWidget {
@@ -11,6 +13,8 @@ class _ListviewPageState extends State<ListviewPage> {
 
   ScrollController _scrollController = new ScrollController();
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -18,9 +22,16 @@ class _ListviewPageState extends State<ListviewPage> {
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent){
-        _agregar10();
+        //_agregar10();
+        _fetchData();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -29,20 +40,28 @@ class _ListviewPageState extends State<ListviewPage> {
       appBar: AppBar(
         title: Text('Listas'),
       ),
-      body: _crearLista(),
+      body: Stack(
+        children: [
+          _crearLista(),
+          _crearLoading(),
+        ]
+      )
     );
   }
 
   _crearLista() {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: _listaNumeros.length,
-      itemBuilder: (context, index) {
-        final imagen = _listaNumeros[index];
-        return FadeInImage(
-          placeholder: AssetImage('data/assets/jar-loading.gif'), 
-          image: NetworkImage('https://picsum.photos/500/300?image=$imagen'));
-      },
+    return RefreshIndicator(
+      onRefresh: _obtenerPagina1,
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: _listaNumeros.length,
+        itemBuilder: (context, index) {
+          final imagen = _listaNumeros[index];
+          return FadeInImage(
+            placeholder: AssetImage('data/assets/jar-loading.gif'), 
+            image: NetworkImage('https://picsum.photos/500/300?image=$imagen'));
+        },
+      ),
     );
   }
 
@@ -52,8 +71,63 @@ class _ListviewPageState extends State<ListviewPage> {
       _listaNumeros.add(_ultimo);
     }
 
-    setState(() {
-      
+    setState(() {});
+  }
+
+  Future _fetchData() async {
+    _isLoading = true;
+    setState(() {});
+
+    final duration  = new Duration(seconds: 2);
+
+
+    new Timer(duration, respuestaHTTP);
+  }
+
+  void respuestaHTTP() {
+    _isLoading = false;
+
+    _scrollController.animateTo(
+      _scrollController.position.pixels + 100,
+      duration: Duration(milliseconds: 200), 
+      curve: Curves.fastOutSlowIn
+    );
+
+    _agregar10();
+  }
+
+  _crearLoading() {
+    if(_isLoading) {
+
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment:  MainAxisAlignment.end,
+        
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator()
+            ],
+          )
+        ],
+      );
+
+    }
+    else {
+      return Container();
+    }
+  }
+
+  Future<Null> _obtenerPagina1() async {
+    final duration = new Duration(seconds: 2);
+    
+    new Timer(duration, () {
+      _listaNumeros.clear();
+      _ultimo++;
+      _agregar10();
     });
+
+    return await Future.delayed(duration);
   }
 }
