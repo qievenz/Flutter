@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:app3_peliculas/src/models/pelicula_model.dart';
@@ -7,13 +8,22 @@ class PeliculasProvider {
   String _apiKey = '253bdb699e116fa71d300265d797db26';
   String _url = 'api.themoviedb.org';
   String _language = 'es-ES';
+  int _paginaPopulares = 0;
+  int _paginaEnCines = 0;
+  bool _cargando = false;
+  
+  List<Pelicula> _populares = [];
+  final _popularesStreamController = StreamController<List<Pelicula>>.broadcast();
 
-  Future<List<Pelicula>> _getResponse (String endpoint) async {
-    final url = Uri.https(_url, '$endpoint', {
-      'api_key': _apiKey,
-      'language': _language,
-    });
+  Function(List<Pelicula>) get popularesSink => _popularesStreamController.sink.add;
 
+  Stream<List<Pelicula>> get popularesStream => _popularesStreamController.stream;
+
+  void disposeStreams() {
+    _popularesStreamController?.close();
+  }
+
+  Future<List<Pelicula>> _getResponse (Uri url) async {
     final resp = await http.get(url);
 
     final decodedData = json.decode(resp.body);
@@ -23,7 +33,39 @@ class PeliculasProvider {
     return peliculas.items;
   }
 
-  Future<List<Pelicula>> getEnCines() => _getResponse('3/movie/now_playing');
+  Future<List<Pelicula>> getEnCines() async {
+    _paginaEnCines++;
 
-  Future<List<Pelicula>> getPopulares() => _getResponse('3/movie/popular');
+    final url = Uri.https(_url, '3/movie/now_playing', {
+      'api_key': _apiKey,
+      'language': _language,
+      'page': _paginaEnCines.toString()
+    });
+
+    return await _getResponse(url);
+  }
+
+  Future<List<Pelicula>> getPopulares() async {
+    if (_cargando) return [];
+
+    _cargando = true;
+
+    _paginaPopulares++;
+
+    final url = Uri.https(_url, '3/movie/popular', {
+      'api_key': _apiKey,
+      'language': _language,
+      'page': _paginaPopulares.toString()
+    });
+
+    final resp = await _getResponse(url);
+    
+    _populares.addAll(resp);
+
+    popularesSink(_populares);
+
+    _cargando = false;
+
+    return resp;
+  }
 }

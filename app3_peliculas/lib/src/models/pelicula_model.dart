@@ -66,9 +66,18 @@ class Pelicula {
 
   String getPosterUrl() {
     String url;
-    if (posterPath == null) url = 'https://i.ytimg.com/vi/tnHbeCHApOw/maxresdefault.jpg';
+    if (posterPath == null || posterPath == 'null') url = 'https://i.ytimg.com/vi/tnHbeCHApOw/maxresdefault.jpg';
     
     url = 'https://image.tmdb.org/t/p/w500/$posterPath';
+    
+    return url;
+  }
+
+  String getBackgroundUrl() {
+    String url;
+    if (backdropPath == null || backdropPath == 'null') url = 'https://i.ytimg.com/vi/tnHbeCHApOw/maxresdefault.jpg';
+    
+    url = 'https://image.tmdb.org/t/p/w500/$backdropPath';
     
     return url;
   }
