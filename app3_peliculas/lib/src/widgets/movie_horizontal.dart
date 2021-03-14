@@ -19,19 +19,20 @@ class MovieHorizontalWidget extends StatelessWidget {
       if (_pageController.position.pixels >= _pageController.position.maxScrollExtent - 200) {
         siguientePagina();
       }
+      if ( _pageController.position.pixels <= 50 ){
+        _pageController.animateToPage(1, duration: Duration(milliseconds: 3000), curve: Curves.elasticOut);
+      }
     });
 
     return Container(
-      alignment: Alignment.bottomLeft,
       height: _screenSize.height * 0.27,
       child: PageView.builder(
+        physics: BouncingScrollPhysics(),
         controller: _pageController,
         pageSnapping: false,
         //children: _tarjetas(context),
         itemBuilder: (context, index) => _crearTarjeta(context, peliculas[index]),
-        //itemBuilder: (context, index) => Text(index.toString()),
         itemCount: peliculas.length,
-        clipBehavior: Clip.antiAlias,
       ),
     );
   }
@@ -44,25 +45,26 @@ class MovieHorizontalWidget extends StatelessWidget {
 */
   Widget _crearTarjeta(context, Pelicula pelicula) {
     print('id: ${pelicula.id}');
-    final peliculaTarjeta =  Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(15.0),
-          child: FadeInImage(
-            image: NetworkImage(pelicula.getPosterUrl()), 
-            placeholder: AssetImage('assets/img/no-image.jpg'),
-            fit: BoxFit.cover,
-            height: 150.0,
+    final peliculaTarjeta =  Container(
+      margin: EdgeInsets.only(right: 15.0),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15.0),
+            child: FadeInImage(
+              image: NetworkImage(pelicula.getPosterUrl()), 
+              placeholder: AssetImage('assets/img/no-image.jpg'),
+              fit: BoxFit.cover,
+              height: 150.0,
+            ),
           ),
-        ),
-        Text(
-          pelicula.title, 
-          overflow: TextOverflow.ellipsis, 
-          style: Theme.of(context).textTheme.caption,
-        ),
-      ],
+          Text(
+            pelicula.title, 
+            overflow: TextOverflow.ellipsis, 
+            style: Theme.of(context).textTheme.caption,
+          ),
+        ],
+      )
     );
 
     return GestureDetector(

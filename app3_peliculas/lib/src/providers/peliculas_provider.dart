@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app3_peliculas/src/models/actor_model.dart';
 import 'package:app3_peliculas/src/models/pelicula_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,14 +24,12 @@ class PeliculasProvider {
     _popularesStreamController?.close();
   }
 
-  Future<List<Pelicula>> _getResponse (Uri url) async {
+  Future<dynamic> _getResponse (Uri url) async {
     final resp = await http.get(url);
 
     final decodedData = json.decode(resp.body);
 
-    final peliculas = Peliculas.fromJsonList(decodedData['results']);
-
-    return peliculas.items;
+    return decodedData;
   }
 
   Future<List<Pelicula>> getEnCines() async {
@@ -42,7 +41,11 @@ class PeliculasProvider {
       'page': _paginaEnCines.toString()
     });
 
-    return await _getResponse(url);
+    final resp = await _getResponse(url);
+
+    final peliculas = Peliculas.fromJsonList(resp['results']);
+
+    return peliculas.items;
   }
 
   Future<List<Pelicula>> getPopulares() async {
@@ -59,13 +62,30 @@ class PeliculasProvider {
     });
 
     final resp = await _getResponse(url);
+
+    final peliculas = Peliculas.fromJsonList(resp['results']);
     
-    _populares.addAll(resp);
+    _populares.addAll(peliculas.items);
 
     popularesSink(_populares);
 
     _cargando = false;
 
     return resp;
+  }
+
+  Future<List<Actor>> getCast(String id) async {
+    final url = Uri.https(_url, '3/movie/$id/credits', {
+      'api_key': _apiKey,
+      'language': _language,
+    });
+
+    print('getcast: ${url.path}');
+
+    final resp = await _getResponse(url);
+
+    final cast = Cast.fromJsonList(resp['cast']);
+
+    return cast.actores;
   }
 }

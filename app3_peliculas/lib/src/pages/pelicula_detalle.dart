@@ -1,14 +1,24 @@
+import 'package:app3_peliculas/src/models/actor_model.dart';
 import 'package:app3_peliculas/src/models/pelicula_model.dart';
+import 'package:app3_peliculas/src/providers/peliculas_provider.dart';
 import 'package:flutter/material.dart';
 
 class PeliculaDetallePage extends StatelessWidget {
   
+  final _pageController = new PageController(
+        initialPage: 1,
+        viewportFraction: 0.3);
   
   @override
   Widget build(BuildContext context) {
 
     final Pelicula pelicula = ModalRoute.of(context).settings.arguments;
 
+    _pageController.addListener(() {
+      if ( _pageController.position.pixels <= 50 ){
+        _pageController.animateToPage(1, duration: Duration(milliseconds: 3000), curve: Curves.elasticOut);
+      }
+    });
 
     return Scaffold(
       body: CustomScrollView(
@@ -19,6 +29,10 @@ class PeliculaDetallePage extends StatelessWidget {
               [
                 SizedBox(height: 10.0,),
                 _posterTitulo(context, pelicula),
+                SizedBox(height: 10.0,),
+                Text(pelicula.overview),
+                SizedBox(height: 10.0,),
+                _crearCasting(pelicula),
               ]
             ),
           ),
@@ -78,6 +92,58 @@ class PeliculaDetallePage extends StatelessWidget {
               ],
             )
           ),
+        ],
+      )
+    );
+  }
+
+  _crearCasting(Pelicula pelicula) {
+    final peliculasProvider = PeliculasProvider();
+
+    return FutureBuilder(
+      future: peliculasProvider.getCast(pelicula.id.toString()),
+      builder: (BuildContext context, AsyncSnapshot<List<Actor>> snapshot) {
+        if (snapshot.hasData) {
+          return _crearActoresPageView(snapshot.data);
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  _crearActoresPageView(List<Actor> actores) {
+    return SizedBox(
+      height: 200.0,
+      child: PageView.builder(
+        pageSnapping: false,
+        controller: _pageController,
+        itemCount: actores.length,
+        itemBuilder: (context, indice) {
+          return _crearTarjetaActor(actores[indice]);
+        }
+      ),
+    );
+  }
+
+  _crearTarjetaActor(Actor actor) {
+    return Container(
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: FadeInImage(
+              placeholder: AssetImage('assets/img/loading.gif'), 
+              image: NetworkImage(actor.getFoto()),
+              height: 150.0,
+              fadeInDuration: Duration(milliseconds: 100),
+              fit: BoxFit.cover,
+            ),
+          ),
+          Text(
+            actor.name,
+            overflow: TextOverflow.ellipsis,
+          )
         ],
       )
     );
