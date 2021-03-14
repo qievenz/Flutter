@@ -69,11 +69,14 @@ class PeliculaDetallePage extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: Image(
-              image: NetworkImage(pelicula.getPosterUrl()),
-              height: 150.0,
+          Hero(
+            tag: pelicula.heroId,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: Image(
+                image: NetworkImage(pelicula.getPosterUrl()),
+                height: 150.0,
+              ),
             ),
           ),
           SizedBox(width: 20.0,),

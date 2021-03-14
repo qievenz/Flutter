@@ -45,17 +45,21 @@ class MovieHorizontalWidget extends StatelessWidget {
 */
   Widget _crearTarjeta(context, Pelicula pelicula) {
     print('id: ${pelicula.id}');
+    pelicula.heroId = '${pelicula.id}-horizontal';
     final peliculaTarjeta =  Container(
       margin: EdgeInsets.only(right: 15.0),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: FadeInImage(
-              image: NetworkImage(pelicula.getPosterUrl()), 
-              placeholder: AssetImage('assets/img/no-image.jpg'),
-              fit: BoxFit.cover,
-              height: 150.0,
+          Hero(
+            tag: pelicula.heroId,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: FadeInImage(
+                image: NetworkImage(pelicula.getPosterUrl()), 
+                placeholder: AssetImage('assets/img/no-image.jpg'),
+                fit: BoxFit.cover,
+                height: 150.0,
+              ),
             ),
           ),
           Text(

@@ -15,6 +15,7 @@ class Peliculas {
 }
 
 class Pelicula {
+  String heroId;
   String posterPath;
   bool adult;
   String overview;
