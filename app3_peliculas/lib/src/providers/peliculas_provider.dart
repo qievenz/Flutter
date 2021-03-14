@@ -80,12 +80,24 @@ class PeliculasProvider {
       'language': _language,
     });
 
-    print('getcast: ${url.path}');
-
     final resp = await _getResponse(url);
 
     final cast = Cast.fromJsonList(resp['cast']);
 
     return cast.actores;
+  }
+
+  Future<List<Pelicula>> buscarPelicula(String query) async {
+    final url = Uri.https(_url, '3/search/movie', {
+      'api_key': _apiKey,
+      'language': _language,
+      'query': query
+    });
+
+    final resp = await _getResponse(url);
+
+    final peliculas = Peliculas.fromJsonList(resp['results']);
+    
+    return peliculas.items;
   }
 }
