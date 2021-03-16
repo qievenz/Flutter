@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
       SystemUiOverlayStyle.light.copyWith(
         statusBarColor: Colors.white
       ),
-      
     );
 
     return MaterialApp(
