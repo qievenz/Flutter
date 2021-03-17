@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => new UiService())
+        ChangeNotifierProvider(create: (_) => new UiProvider())
       ],
       child: MaterialApp(
         title: 'QR Scanner',

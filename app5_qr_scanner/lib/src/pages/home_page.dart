@@ -33,7 +33,7 @@ class _HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final uiService = Provider.of<UiService>(context);
+    final uiService = Provider.of<UiProvider>(context);
     
     final currentIndex = uiService.selectedMenuOption;
 

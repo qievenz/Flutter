@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 class CustomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final uiService = Provider.of<UiService>(context);
+    final uiService = Provider.of<UiProvider>(context);
     final currentIndex = uiService.selectedMenuOption;
 
     return BottomNavigationBar(
