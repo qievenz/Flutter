@@ -1,3 +1,5 @@
+import 'package:app5_qr_scanner/providers/db_provider.dart';
+import 'package:app5_qr_scanner/providers/scan_list_provider.dart';
 import 'package:app5_qr_scanner/providers/ui_provider.dart';
 import 'package:app5_qr_scanner/src/pages/direcciones_page.dart';
 import 'package:app5_qr_scanner/src/pages/mapas_page.dart';
@@ -9,13 +11,15 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final scanListProvider = Provider.of<ScanListProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Historial'),
         actions: [
           IconButton(
             icon: Icon(Icons.delete_forever), 
-            onPressed: () {}
+            onPressed: () => scanListProvider.borrarTodos(),
           ),
         ],
         elevation: 0,
@@ -37,11 +41,16 @@ class _HomePageBody extends StatelessWidget {
     
     final currentIndex = uiService.selectedMenuOption;
 
+    final scanListProvider = Provider.of<ScanListProvider>(context, listen: false);
+
+
     switch (currentIndex) {
       case 0:
-          return MapasPage();
+        scanListProvider.cargarScansTipo('geo');
+        return MapasPage();
         break;
       case 1:
+        scanListProvider.cargarScansTipo('http');
         return DireccionesPage();
         break;
       default:

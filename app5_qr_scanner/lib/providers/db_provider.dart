@@ -75,7 +75,7 @@ class DBPRovider {
 
     return resp.isNotEmpty
       ? resp.map((e) => ScanModel.fromJson(e)).toList()
-      : null;
+      : [];
   }
   
   Future<List<ScanModel>> obtenerScansTodos() async {
@@ -84,7 +84,7 @@ class DBPRovider {
 
     return resp.isNotEmpty
       ? resp.map((e) => ScanModel.fromJson(e)).toList()
-      : null;
+      : [];
   }
 
   Future<int> actualizarScan(ScanModel scan) async {
@@ -94,14 +94,14 @@ class DBPRovider {
     return resp;
   }
 
-  Future<int> deleteScan(int id) async {
+  Future<int> borrarScan(int id) async {
     final db = await database;
     final resp = await db.delete('scans', where: 'id = ?', whereArgs: [id]);
 
     return resp;
   }
 
-  Future<int> deleteAllScans() async {
+  Future<int> borrarTodosScans() async {
     final db = await database;
     final resp = await db.delete('scans');
 

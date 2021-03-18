@@ -1,27 +1,23 @@
-import 'package:app5_qr_scanner/models/scan_model.dart';
-import 'package:app5_qr_scanner/providers/db_provider.dart';
+import 'package:app5_qr_scanner/providers/scan_list_provider.dart';
+import 'package:app5_qr_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
 
 class ScanButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {
+      onPressed: () async {
         //FlutterBarcodeScanner.getBarcodeStreamReceiver("#3d8bef", "Cancelar", false, ScanMode.QR).listen((qrResp) => _procesarQR());
-        var qrResp = 'pagina.com.ar';
-        _procesarQR(qrResp);
+        //var qrResp = 'http:www.xvideos.com';
+        var qrResp = 'gps:-34.658264,-58.564609';
+        
+        final scanListProvider = Provider.of<ScanListProvider>(context, listen: false);
+        final nuevoScan = await scanListProvider.nuevoScan(qrResp);
+
+        launchURL(context, nuevoScan);
       },
       child: Icon(Icons.filter_center_focus),
     );
-  }
-
-  _procesarQR(qrResp) async {
-
-    ScanModel test = ScanModel(id: 2, tipo: 'qwert', valor: qrResp);
-
-    //DBPRovider.db.nuevoScan(test);
-    var scan = await DBPRovider.db.obtenerScan(2);
-    print(scan.valor);
   }
 }
