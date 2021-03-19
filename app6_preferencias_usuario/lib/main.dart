@@ -5,17 +5,20 @@ import 'package:flutter/material.dart';
  
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await PreferenciasUsuario().initPrefs();
+  final prefs = PreferenciasUsuario();
+  await prefs.initPrefs();
 
   runApp(MyApp());
 } 
  
 class MyApp extends StatelessWidget {
+  final prefs = PreferenciasUsuario();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Preferencias',
-      initialRoute: HomePage.routeName,
+      initialRoute: prefs.ultimaPagina,
       routes: {
         HomePage.routeName: (_) => HomePage(),
         SettingsPage.routeName: (_) => SettingsPage(),
