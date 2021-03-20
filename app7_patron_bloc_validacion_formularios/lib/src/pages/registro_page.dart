@@ -5,7 +5,7 @@ import 'package:app7_patron_bloc_validacion_formularios/src/providers/usuario_pr
 import 'package:app7_patron_bloc_validacion_formularios/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class RegistroPage extends StatelessWidget {
   final usuarioProvider = UsuarioProvider();
 
   @override
@@ -94,7 +94,7 @@ class LoginPage extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text('Ingreso', style: TextStyle(fontSize: 20.0),),
+                Text('Crear Cuenta', style: TextStyle(fontSize: 20.0),),
                 SizedBox(height: 60.0,),
                 _crearEmail(bloc),
                 SizedBox(height: 40.0,),
@@ -162,35 +162,35 @@ class LoginPage extends StatelessWidget {
   }
 
   _crearBoton(LoginBloc bloc){
-      return StreamBuilder(
-        stream: bloc.botonStream,
-        builder: (context, snapshot) {
-          return ElevatedButton(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-              child: Text('Ingresar'),
+    return StreamBuilder(
+      stream: bloc.botonStream,
+      builder: (context, snapshot) {
+        return ElevatedButton(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
+            child: Text('Ingresar'),
+          ),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0)
             ),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0)
-              ),
-              elevation: 0.0,
-              primary: Colors.deepPurple,
-              textStyle: TextStyle(color: Colors.white),
-            ),
-            onPressed: snapshot.hasData ? () => _login(context, bloc) : null,
-          );
-        }
-      );
-    }
-
-    _login(BuildContext context, LoginBloc bloc) async {
-      final loginResp = await usuarioProvider.login(bloc.email, bloc.password);
-
-      if (loginResp['ok']) {
-        Navigator.pushReplacementNamed(context, 'home');
-      } else {
-        mostrarAlerta(context);
+            elevation: 0.0,
+            primary: Colors.deepPurple,
+            textStyle: TextStyle(color: Colors.white),
+          ),
+          onPressed: snapshot.hasData ? () => _register(context, bloc) : null,
+        );
       }
+    );
+  }
+
+  _register(BuildContext context, LoginBloc bloc) async{
+    final loginResp = await usuarioProvider.nuevoUsuario(bloc.email, bloc.password);
+
+    if (loginResp['ok']) {
+      Navigator.pushReplacementNamed(context, 'home');
+    } else {
+      mostrarAlerta(context);
     }
+  }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app7_patron_bloc_validacion_formularios/src/share_prefs/preferencias_usuario.dart';
 import 'package:http/http.dart' as http;
 import 'package:app7_patron_bloc_validacion_formularios/models/producto_model.dart';
 import 'package:mime_type/mime_type.dart';
@@ -8,9 +9,10 @@ import 'package:http_parser/http_parser.dart';
 
 class ProductosProvider {
   final String _url = 'flutter-varios-44f7e-default-rtdb.firebaseio.com';
+  final _prefs = PreferenciasUsuario();
 
   Future<bool> crearProducto (ProductoModel producto) async {
-    final url = Uri.https(_url, 'productos.json');
+    final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
 
     final resp = await http.post(url, body: productoModelToJson(producto));
 
@@ -22,7 +24,7 @@ class ProductosProvider {
   }
 
   Future<List<ProductoModel>> cargarProductos() async {
-    final url = Uri.https(_url, 'productos.json');
+    final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
 
     final resp = await http.get(url);
 
@@ -41,7 +43,7 @@ class ProductosProvider {
   }
 
   borrarProducto(String id) async {
-    final url = Uri.https(_url, 'productos/$id.json');
+    final url = Uri.https(_url, 'productos/$id.json?auth=${_prefs.token}');
 
     final resp = await http.delete(url);
 
@@ -49,7 +51,7 @@ class ProductosProvider {
   }
 
   borrarTodo() async {
-    final url = Uri.https(_url, 'productos.json');
+    final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
 
     final resp = await http.delete(url);
 
@@ -57,7 +59,7 @@ class ProductosProvider {
   }
 
   actualizarProducto(ProductoModel producto) async {
-    final url = Uri.https(_url, 'productos/${producto.id}.json');
+    final url = Uri.https(_url, 'productos/${producto.id}.json?auth=${_prefs.token}');
 
     final resp = await http.put(url, body: productoModelToJson(producto));
 
