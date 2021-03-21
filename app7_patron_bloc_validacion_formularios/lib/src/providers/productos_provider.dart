@@ -12,7 +12,8 @@ class ProductosProvider {
   final _prefs = PreferenciasUsuario();
 
   Future<bool> crearProducto (ProductoModel producto) async {
-    final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
+    //final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
+    final url = Uri.https(_url, 'productos.json');
 
     final resp = await http.post(url, body: productoModelToJson(producto));
 
@@ -24,7 +25,8 @@ class ProductosProvider {
   }
 
   Future<List<ProductoModel>> cargarProductos() async {
-    final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
+    //final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
+    final url = Uri.https(_url, 'productos.json');
 
     final resp = await http.get(url);
 
@@ -43,7 +45,8 @@ class ProductosProvider {
   }
 
   borrarProducto(String id) async {
-    final url = Uri.https(_url, 'productos/$id.json?auth=${_prefs.token}');
+    //final url = Uri.https(_url, 'productos/$id.json?auth=${_prefs.token}');
+    final url = Uri.https(_url, 'productos/$id.json');
 
     final resp = await http.delete(url);
 
@@ -51,7 +54,8 @@ class ProductosProvider {
   }
 
   borrarTodo() async {
-    final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
+    //final url = Uri.https(_url, 'productos.json?auth=${_prefs.token}');
+    final url = Uri.https(_url, 'productos.json');
 
     final resp = await http.delete(url);
 
@@ -59,7 +63,8 @@ class ProductosProvider {
   }
 
   actualizarProducto(ProductoModel producto) async {
-    final url = Uri.https(_url, 'productos/${producto.id}.json?auth=${_prefs.token}');
+    //final url = Uri.https(_url, 'productos/${producto.id}.json?auth=${_prefs.token}');
+    final url = Uri.https(_url, 'productos/${producto.id}.json');
 
     final resp = await http.put(url, body: productoModelToJson(producto));
 

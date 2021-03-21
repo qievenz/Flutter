@@ -1,5 +1,6 @@
+import 'package:app7_patron_bloc_validacion_formularios/bloc/productos_bloc.dart';
+import 'package:app7_patron_bloc_validacion_formularios/bloc/provider.dart';
 import 'package:app7_patron_bloc_validacion_formularios/models/producto_model.dart';
-import 'package:app7_patron_bloc_validacion_formularios/src/providers/productos_provider.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,10 +9,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final productosProvider = ProductosProvider();
 
   @override
   Widget build(BuildContext context) {
+
+    final productosBloc = Provider.productosBloc(context);
+    productosBloc.cargarProductos();
     
     return Scaffold(
       appBar: AppBar(
@@ -19,11 +22,11 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.delete), 
-            onPressed: _borrarTodo,
+            onPressed: () => _borrarTodo(productosBloc),
           ),
         ],
       ),
-      body: _crearListado(),
+      body: _crearListado(productosBloc),
       floatingActionButton: _crearBoton(context),
     );
   }
@@ -36,10 +39,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _crearListado() {
-    return FutureBuilder(
-      future: productosProvider.cargarProductos(),
-      builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+  _crearListado(ProductosBloc productosBloc) {
+    return StreamBuilder(
+      stream: productosBloc.productosStream,
+      builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot){
         if (snapshot.hasData) {
           return ListView.builder(
               itemCount: snapshot.data.length,
@@ -52,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.red,
                   ),
                   onDismissed: (direccion) {
-                    productosProvider.borrarProducto(producto.id);
+                    productosBloc.borrarProducto(producto.id);
                   },
                   child: ListTile(
 
@@ -74,8 +77,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _borrarTodo() {
-    productosProvider.borrarTodo();
+  _borrarTodo(ProductosBloc productosBloc) {
+    productosBloc.borrarTodosProducto();
     setState(() {});
   }
 
