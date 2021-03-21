@@ -1,4 +1,7 @@
+import 'package:app8_notificaciones_push/src/pages/mensaje_page.dart';
 import 'package:flutter/material.dart';
+
+import 'src/pages/home_page.dart';
  
 void main() => runApp(MyApp());
  
@@ -7,16 +10,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Notificaciones Push',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Material App Bar'),
-        ),
-        body: Center(
-          child: Container(
-            child: Text('Hello World'),
-          ),
-        ),
-      ),
+      initialRoute: HomePage.route,
+      routes: {
+        HomePage.route: (context) => HomePage(),
+        MensajePage.route: (context) => MensajePage(),
+      }
     );
   }
 }

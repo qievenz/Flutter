@@ -1,4 +1,4 @@
-name: app8_notificaciones_push
+name: app9_noticias_provider
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -23,8 +23,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_messaging: "^8.0.0-dev.15"
-  firebase_core: "^0.7.0"
 
 
   # The following adds the Cupertino Icons font to your application.
