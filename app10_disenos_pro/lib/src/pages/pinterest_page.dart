@@ -37,6 +37,7 @@ class _BottomPinterestMenu extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         child: PinterestMenu(
           mostrar: mostrar,
+          width: 300,
           backgroundColor: Colors.white60,
           activeColor: Colors.red.shade800,
           inactiveColor: Colors.black87, items: [

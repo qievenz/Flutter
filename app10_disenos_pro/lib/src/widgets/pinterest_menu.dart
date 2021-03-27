@@ -12,13 +12,17 @@ class PinterestMenu extends StatelessWidget {
   final Color activeColor;
   final Color inactiveColor;
   final List<PinterestButton> items;
+  final double width;
+  final double height;
 
   PinterestMenu({
+    @required this.items,
     this.mostrar = true, 
     this.backgroundColor = Colors.white, 
     this.activeColor = Colors.black45, 
     this.inactiveColor = Colors.blueGrey, 
-    @required this.items
+    this.width = 250, 
+    this.height = 60,
   });
 
   
@@ -37,6 +41,8 @@ class PinterestMenu extends StatelessWidget {
           opacity: (mostrar) ? 1 : 0,
           duration: Duration(milliseconds: 250),
           child: _PinterestMenuBackground(
+            width: width,
+            height: height,
             child: _MenuItems(items),
           ),
         );
@@ -48,8 +54,13 @@ class PinterestMenu extends StatelessWidget {
 class _PinterestMenuBackground extends StatelessWidget {
 
   final Widget child;
+  final double width;
+  final double height;
   
-  const _PinterestMenuBackground({@required this.child});
+  const _PinterestMenuBackground({
+    @required this.child, 
+    @required this.width, 
+    @required this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +68,8 @@ class _PinterestMenuBackground extends StatelessWidget {
 
     return Container(
       child: child,
-      width: 250,
-      height: 60,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: menuProvider.backgroundColor,
         borderRadius: BorderRadius.all(Radius.circular(100)),
