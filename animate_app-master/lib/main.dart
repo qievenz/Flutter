@@ -1,9 +1,8 @@
-import 'package:app10_disenos_pro/src/pages/sliver_list_page.dart';
 import 'package:flutter/material.dart';
 
-import 'src/pages/emergency_page.dart';
-import 'src/pages/navegacion_page.dart';
+import 'package:animate_do_app/src/pages/pagina1_page.dart';
 
+ 
 void main() => runApp(MyApp());
  
 class MyApp extends StatelessWidget {
@@ -11,8 +10,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Diseños PRO',
-      home: NavegacionPage(),
+      title: 'Animate_do',
+      home: Pagina1Page()
     );
   }
 }
