@@ -1,4 +1,6 @@
+import 'package:app10_disenos_pro/src/themes/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class SliverListPage extends StatelessWidget {
@@ -30,13 +32,14 @@ class _BotonNewList extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
+    final appTheme = Provider.of<ThemeChanger>(context);
 
     return ButtonTheme(
       minWidth: size.width * 0.9,
       height: 100,
       child: RaisedButton(
         onPressed: (){},
-        color: Color(0xffED6762),
+        color: (appTheme.darkTheme) ? appTheme.currentTheme.accentColor : Color(0xffED6762),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only( topLeft: Radius.circular(50) )
         ),
