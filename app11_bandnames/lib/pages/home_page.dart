@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:app11_bandnames/models/band.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,30 +25,111 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('BandNames', style: TextStyle(color: Colors.black87),),
+        title: Text(
+          'BandNames',
+          style: TextStyle(color: Colors.black87),
+        ),
         backgroundColor: Colors.white,
       ),
       body: ListView.builder(
-        itemCount: bands.length,
-        itemBuilder: (context, index) => _bandTile(bands[index])
-      ),
+          itemCount: bands.length,
+          itemBuilder: (context, index) => _bandTile(bands[index])),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         elevation: 1,
-        onPressed: (){},
+        onPressed: () => addNewBand(),
       ),
-   );
+    );
   }
 
-  ListTile _bandTile(Band band) {
-    return ListTile(
-          leading: CircleAvatar(
-            child: Text(band.name.substring(0,2)),
-            backgroundColor: Colors.blue[100],
+  Widget _bandTile(Band band) {
+    return Dismissible(
+      key: Key(band.id),
+      direction: DismissDirection.startToEnd,
+      onDismissed: (direction) {
+        print('borrar: $direction');
+      },
+      background: Container(
+        color: Colors.red,
+        padding: EdgeInsets.only(left: 8.0),
+        child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Delete band',
+              style: TextStyle(color: Colors.white),
+            )),
+      ),
+      child: ListTile(
+        leading: CircleAvatar(
+          child: Text(band.name.substring(0, 2)),
+          backgroundColor: Colors.blue[100],
+        ),
+        title: Text(band.name),
+        trailing: Text(
+          '${band.votes}',
+          style: TextStyle(fontSize: 20),
+        ),
+        onTap: () => print(band.id),
+      ),
+    );
+  }
+
+  addNewBand() {
+    final textController = TextEditingController();
+
+    if (!kIsWeb && Platform.isIOS) {
+      showCupertinoDialog(
+          context: context,
+          builder: (_) {
+            return CupertinoAlertDialog(
+              title: Text('New band: '),
+              content: CupertinoTextField(
+                controller: textController,
+              ),
+              actions: [
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child: Text('Add'),
+                  onPressed: () => addBandToList(textController.text),
+                ),
+                CupertinoDialogAction(
+                  isDestructiveAction: true,
+                  child: Text('Dismiss'),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            );
+          });
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('New band: '),
+          content: TextField(
+            controller: textController,
           ),
-          title: Text(band.name),
-          trailing: Text('${band.votes}', style: TextStyle(fontSize: 20),),
-          onTap: () => print(band.id),
+          actions: [
+            MaterialButton(
+              onPressed: () => addBandToList(textController.text),
+              child: Text('Add'),
+            ),
+          ],
         );
+      },
+    );
+  }
+
+  addBandToList(String name) {
+    if (name.length > 1) {
+      setState(() {
+        this
+            .bands
+            .add(new Band(id: DateTime.now().toString(), name: name, votes: 0));
+      });
+    }
+
+    Navigator.pop(context);
   }
 }
