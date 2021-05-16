@@ -9,4 +9,9 @@ io.on('connection', client => {
       console.log(payload);
       io.emit('mensaje', {resp: 'resouestaaa'});
   })
+
+  client.on('emitir-mensaje', (payload) => {
+    console.log('Enviando mensaje');
+    io.emit('nuevo-mensaje', 'mensaje recibido?');
+  });
 });
